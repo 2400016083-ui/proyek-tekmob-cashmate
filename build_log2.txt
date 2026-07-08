@@ -1,0 +1,31 @@
+Running Gradle task 'assembleDebug'...                          ../../runtime/platform/allocation.cc: 22: error: Out of memory.
+version=3.11.4 (stable) (Tue Mar 24 01:02:20 2026 -0700) on "windows_x64"
+pid=17656, thread=20180, isolate_group=main(00000163F63CABB0), isolate=main(00000163F63B2A50)
+os=windows, arch=x64, comp=no, sim=no
+isolate_instructions=163f5620000, vm_instructions=7ff7aa8c8400
+fp=2782afe7d0, sp=2782afe788, pc=7ff7aabacca3
+  pc 0x00007ff7aabacca3 fp 0x0000002782afe7d0 Dart_DetectNullSafety+0x2dc1c3
+-- End of DumpStackTrace
+  pc 0x0000000000000000 fp 0x0000002782afea30 sp 0x0000000000000000 [Stub] Exit frame
+  pc 0x00000163f56bab68 fp 0x0000002782afea78 sp 0x0000002782afea40 [Unoptimized] _NativeSocket@16069316._nativeRead@16069316+0x78
+  pc 0x00000163f56ba38d fp 0x0000002782afeaf0 sp 0x0000002782afea88 [Unoptimized] _NativeSocket@16069316.read+0x4ad
+  pc 0x00000163f56b9e93 fp 0x0000002782afeb68 sp 0x0000002782afeb00 [Unoptimized] _RawSocket@16069316.read+0x473
+  pc 0x00000163f56b569b fp 0x0000002782afebb0 sp 0x0000002782afeb78 [Unoptimized] _Socket@16069316._onData@16069316+0x1bb
+  pc 0x00000163f56b5a36 fp 0x0000002782afebf0 sp 0x0000002782afebc0 [Unoptimized] _Socket@16069316._onData@16069316+0x86
+  pc 0x00000163f57cd6eb fp 0x0000002782afec70 sp 0x0000002782afec00 [Unoptimized] _rootRunUnary@5048458+0x2cb
+  pc 0x00000163f57cd91d fp 0x0000002782afecd8 sp 0x0000002782afec80 [Unoptimized] _rootRunUnary@5048458+0x11d
+  pc 0x00000163f563e27f fp 0x0000002782afed70 sp 0x0000002782afece8 [Unoptimized] _CustomZone@5048458.runUnary+0x1ef
+  pc 0x00000163f563e403 fp 0x0000002782afedf8 sp 0x0000002782afed80 [Unoptimized] _CustomZone@5048458.runUnaryGuarded+0x123
+  pc 0x00000163f563e9f1 fp 0x0000002782afee50 sp 0x0000002782afee08 [Unoptimized] _BufferingStreamSubscription@5048458._sendData@5048458+0x291
+  pc 0x00000163f5678078 fp 0x0000002782afee90 sp 0x0000002782afee60 [Unoptimized] _BufferingStreamSubscription@5048458._add@5048458+0x228
+  pc 0x00000163f5678607 fp 0x0000002782afeed0 sp 0x0000002782afeea0 [Unoptimized] _SyncStreamController@5048458._sendData@5048458+0x197
+  pc 0x00000163f5678959 fp 0x0000002782afef10 sp 0x0000002782afeee0 [Unoptimized] _StreamController@5048458._add@5048458+0x1b9
+  pc 0x00000163f5678dd8 fp 0x0000002782afef50 sp 0x0000002782afef20 [Unoptimized] _StreamController@5048458.add+0x1f8
+  pc 0x00000163f56b94c8 fp 0x0000002782afef90 sp 0x0000002782afef60 [Unoptimized] new _RawSocket@16069316..<anonymous closure>+0xb8
+  pc 0x00000163f579f4d2 fp 0x0000002782afefe8 sp 0x0000002782afefa0 [Unoptimized] _NativeSocket@16069316.issueReadEvent.issue+0x5d2
+  pc 0x00000163f57c85f0 fp 0x0000002782aff030 sp 0x0000002782afeff8 [Unoptimized] _microtaskLoop@5048458+0x210
+  pc 0x00000163f57cbf65 fp 0x0000002782aff070 sp 0x0000002782aff040 [Unoptimized] _startMicrotaskLoop@5048458+0xb5
+  pc 0x00000163f57cc1e6 fp 0x0000002782aff098 sp 0x0000002782aff080 [Unoptimized] _startMicrotaskLoop@5048458+0x76
+  pc 0x00000163f57dcf54 fp 0x0000002782aff0d8 sp 0x0000002782aff0a8 [Unoptimized] _runPendingImmediateCallback@1026248+0x104
+  pc 0x00000163f57f0cc8 fp 0x0000002782aff118 sp 0x0000002782aff0e8 [Unoptimized] _RawReceivePort@1026248._handleMessage@1026248+0x1c8
+  pc 0x00000163f5d0318f fp 0x0000002782aff240 sp 0x0000002782aff128 [Stub] Entry frame

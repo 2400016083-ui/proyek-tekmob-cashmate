@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_assets.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/services/auth_service.dart';
+import '../../core/utils/auth_error_mapper.dart';
+import '../../core/utils/validators.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,11 +17,110 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
+  bool _isLoading = false;
+
+  final _authService = AuthService();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   static const Color green = Color(0xFF168A4A);
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    final error = Validators.email(email) ??
+        Validators.required(password, message: 'Password wajib diisi');
+    if (error != null) {
+      _showMessage(error);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await _authService.signInWithEmail(email, password);
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } on FirebaseAuthException catch (e) {
+      _showMessage(firebaseAuthErrorMessage(e));
+    } catch (_) {
+      _showMessage('Terjadi kesalahan, silakan coba lagi');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    setState(() => _isLoading = true);
+    try {
+      await _authService.signInWithGoogle();
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } on FirebaseAuthException catch (e) {
+      _showMessage(firebaseAuthErrorMessage(e));
+    } catch (_) {
+      _showMessage(
+        'Google Sign-In belum bisa dipakai. Pastikan sudah didaftarkan di Firebase Console.',
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _forgotPassword() async {
+    final controller = TextEditingController(text: emailController.text.trim());
+    final email = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Lupa Password'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.emailAddress,
+          decoration: const InputDecoration(hintText: 'contoh@email.com'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+            child: const Text('Kirim'),
+          ),
+        ],
+      ),
+    );
+
+    if (email == null || email.isEmpty) return;
+    if (!mounted) return;
+
+    try {
+      await _authService.sendPasswordResetEmail(email);
+      if (!mounted) return;
+      _showMessage('Link reset password telah dikirim ke $email');
+    } on FirebaseAuthException catch (e) {
+      _showMessage(firebaseAuthErrorMessage(e));
+    }
+  }
+
+  void _goToRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 58,
                 child: TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: "contoh@email.com",
                     contentPadding: const EdgeInsets.symmetric(
@@ -170,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _forgotPassword,
                   child: const Text(
                     "Lupa Password?",
                     style: TextStyle(
@@ -183,13 +289,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               const SizedBox(height: 12),
-                            SizedBox(
+              SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Pindah ke Dashboard
-                  },
+                  onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: green,
                     elevation: 0,
@@ -197,14 +301,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    "Masuk",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : const Text(
+                          "Masuk",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
 
@@ -231,13 +344,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
 
-                            const SizedBox(height: 28),
+              const SizedBox(height: 28),
 
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _loginWithGoogle,
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
                       color: Color(0xffD4D4D4),
@@ -271,27 +384,30 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 50),
 
               Center(
-                child: RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
+                child: GestureDetector(
+                  onTap: _isLoading ? null : _goToRegister,
+                  child: RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "Belum punya akun? ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "Daftar sekarang",
+                          style: TextStyle(
+                            color: green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    children: [
-                      TextSpan(
-                        text: "Belum punya akun? ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Daftar sekarang",
-                        style: TextStyle(
-                          color: green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ),

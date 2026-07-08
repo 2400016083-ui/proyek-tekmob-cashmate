@@ -29,4 +29,14 @@ class AppColors {
 
   // Shadow
   static const Color shadow = Color(0x14000000);
+
+  // Fixed palette for category charts (Firestore data has no Color field)
+  static const List<Color> chartPalette = [
+    Color(0xFFDC2626),
+    Color(0xFF16A34A),
+    Color(0xFF3B82F6),
+    Color(0xFFF59E0B),
+    Color(0xFF8B5CF6),
+    Color(0xFFEC4899),
+  ];
 }

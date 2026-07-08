@@ -1,0 +1,54 @@
+Running Gradle task 'assembleDebug'...                          
+Unhandled exception:
+Crash when compiling package:flutter/src/material/animated_icons/data/event_add.g.dart:
+Out of Memory
+
+#0      _RegExp._ExecuteMatchSticky (dart:core-patch/regexp_patch.dart)
+#1      _RegExp.matchAsPrefix (dart:core-patch/regexp_patch.dart)
+#2      _StringBase.indexOf (dart:core-patch/string_patch.dart)
+#3      String.indexOf (dart:core-patch/string_patch.dart)
+#4      _StringBase.contains (dart:core-patch/string_patch.dart)
+#5      String.contains (dart:core-patch/string_patch.dart)
+#6      _Uri._checkWindowsPathReservedCharacters (dart:core/uri.dart)
+#7      _Uri._toWindowsFilePath (dart:core/uri.dart)
+#8      _Uri.toFilePath (dart:core/uri.dart)
+#9      _IoFileSystemEntity.readAsBytes (package:front_end/src/api_prototype/standard_file_system.dart)
+#10     HybridFileSystemEntity.readAsBytes (package:front_end/src/base/hybrid_file_system.dart)
+#11     _SuspendState._createAsyncStarCallback.<anonymous closure> (dart:async-patch/async_patch.dart)
+#12     _rootRunUnary (dart:async/zone_root.dart)
+#13     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart)
+#14     Future._propagateToListeners (dart:async/future_impl.dart)
+#15     Future._completeWithValue (dart:async/future_impl.dart)
+#16     _SuspendState._createAsyncStarCallback.<anonymous closure> (dart:async-patch/async_patch.dart)
+#17     _rootRunUnary (dart:async/zone_root.dart)
+#18     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart)
+#19     Future._propagateToListeners (dart:async/future_impl.dart)
+#20     Future._completeWithValue (dart:async/future_impl.dart)
+#21     Future._asyncCompleteWithValue.<anonymous closure> (dart:async/future_impl.dart)
+#22     _rootRun (dart:async/zone_root.dart)
+#23     _CustomZone.run (dart:async/zone.dart)
+#24     _CustomZone.bindCallback.<anonymous closure> (dart:async/zone.dart)
+#25     _microtaskLoop (dart:async/schedule_microtask.dart)
+#26     _startMicrotaskLoop (dart:async/schedule_microtask.dart)
+#27     _Timer._runTimers (dart:isolate-patch/timer_impl.dart)
+#28     _Timer._handleMessage (dart:isolate-patch/timer_impl.dart)
+#29     _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart)
+
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 3m 53s
+Running Gradle task 'assembleDebug'...                            235.0s
+Gradle task assembleDebug failed with exit code 1

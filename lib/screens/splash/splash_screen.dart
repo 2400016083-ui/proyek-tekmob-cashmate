@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../auth/login_screen.dart';
 import '../../core/constants/app_assets.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/services/auth_service.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -83,11 +84,10 @@ class SplashScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      final isLoggedIn = AuthService().currentUser != null;
+                      Navigator.pushReplacementNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
+                        isLoggedIn ? AppRoutes.main : AppRoutes.login,
                       );
                     },
                     child: const Text(
