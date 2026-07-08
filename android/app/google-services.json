@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "709916044931",
+    "project_id": "cashmate-cb663",
+    "storage_bucket": "cashmate-cb663.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709916044931:android:a44aa60e6c014d57fcb5b6",
+        "android_client_info": {
+          "package_name": "com.example.cashmate_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcP6vC2cdw29btRo9UcLb8M84K_XxWF6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
