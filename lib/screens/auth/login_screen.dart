@@ -49,17 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() => _isLoading = true);
-    try {
-      await _authService.signInWithEmail(email, password);
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(context, AppRoutes.main);
-    } on FirebaseAuthException catch (e) {
-      _showMessage(firebaseAuthErrorMessage(e));
-    } catch (_) {
-      _showMessage('Terjadi kesalahan, silakan coba lagi');
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+    // Mode dummy: sementara skip AuthService.signInWithEmail supaya tidak
+    // terhalang setup Firebase Console (Email/Password sign-in). Aktifkan
+    // lagi baris di bawah begitu itu sudah dikonfigurasi:
+    // await _authService.signInWithEmail(email, password);
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, AppRoutes.main);
   }
 
   Future<void> _loginWithGoogle() async {

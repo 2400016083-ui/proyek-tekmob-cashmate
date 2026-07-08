@@ -80,14 +80,38 @@ class DashboardSummary {
 class DummyData {
   DummyData._();
 
-  static final UserModel currentUser = const UserModel(
-    id: 'u1',
-    name: 'Arul Budiman',
-    email: 'arul.budiman@cashmate.app',
-    role: 'Small Business Owner',
-    businessName: 'Toko Makanan & Minuman',
-    isPremium: true,
+  /// Reactive so Edit Profil can update it and have every screen reflect
+  /// the change immediately without a backend.
+  static final ValueNotifier<UserModel> currentUserNotifier = ValueNotifier(
+    const UserModel(
+      id: 'u1',
+      name: 'Arul Budiman',
+      email: 'arul.budiman@cashmate.app',
+      role: 'Small Business Owner',
+      businessName: 'Toko Makanan & Minuman',
+      isPremium: true,
+      phoneNumber: '+62 812-3456-7890',
+      gender: 'Laki-laki',
+      address: 'Jl. Malioboro No. 52, Yogyakarta',
+      businessCategory: 'Makanan & Minuman',
+      businessDescription:
+          'Menyediakan berbagai makanan dan minuman berkualitas untuk pelanggan',
+      businessAddress: 'Jl. Malioboro No. 52, Yogyakarta',
+      businessPhone: '+62 812-3456-7890',
+    ),
   );
+
+  static UserModel get currentUser => currentUserNotifier.value;
+
+  static void updateCurrentUser(UserModel updated) {
+    currentUserNotifier.value = updated;
+  }
+
+  /// Reactive so the Profile menu's "Cadangan Cloud" status stays in sync
+  /// with whatever is toggled on the Cadangan Cloud screen.
+  static final ValueNotifier<bool> cloudBackupActiveNotifier = ValueNotifier(true);
+  static final ValueNotifier<DateTime> lastBackupAtNotifier =
+      ValueNotifier(DateTime.now().subtract(const Duration(hours: 3)));
 
   static const DashboardSummary dashboardSummary = DashboardSummary(
     totalBalance: 12450000,
@@ -116,6 +140,9 @@ class DummyData {
   static final DateTime _today = DateTime.now();
   static final DateTime _yesterday = _today.subtract(const Duration(days: 1));
   static final DateTime _fixedPastDate = DateTime(2026, 5, 20);
+  static final DateTime _twoMonthsAgo = DateTime(_today.year, _today.month - 2, 8);
+  static final DateTime _threeMonthsAgo = DateTime(_today.year, _today.month - 3, 12);
+  static final DateTime _fourMonthsAgo = DateTime(_today.year, _today.month - 4, 20);
 
   /// Mutable so Add Transaksi / Scan Struk can insert new dummy entries and
   /// have the list screens reflect them immediately without a backend.
@@ -194,13 +221,70 @@ class DummyData {
       amount: 300000,
       date: DateTime(_fixedPastDate.year, _fixedPastDate.month, _fixedPastDate.day, 12, 55),
     ),
+    TransactionModel(
+      id: 't10',
+      title: 'Penjualan Produk',
+      category: 'Penjualan Produk',
+      type: TransactionType.income,
+      amount: 600000,
+      date: DateTime(_twoMonthsAgo.year, _twoMonthsAgo.month, _twoMonthsAgo.day, 10, 0),
+    ),
+    TransactionModel(
+      id: 't11',
+      title: 'Pembelian Bahan Baku',
+      category: 'Bahan Baku',
+      type: TransactionType.expense,
+      amount: 250000,
+      date: DateTime(_twoMonthsAgo.year, _twoMonthsAgo.month, _twoMonthsAgo.day, 15, 30),
+    ),
+    TransactionModel(
+      id: 't12',
+      title: 'Penjualan Produk',
+      category: 'Penjualan Produk',
+      type: TransactionType.income,
+      amount: 700000,
+      date: DateTime(_threeMonthsAgo.year, _threeMonthsAgo.month, _threeMonthsAgo.day, 9, 15),
+    ),
+    TransactionModel(
+      id: 't13',
+      title: 'Promosi Media Sosial',
+      category: 'Pemasaran',
+      type: TransactionType.expense,
+      amount: 400000,
+      date: DateTime(_threeMonthsAgo.year, _threeMonthsAgo.month, _threeMonthsAgo.day, 11, 0),
+    ),
+    TransactionModel(
+      id: 't14',
+      title: 'Bayar Listrik & Air',
+      category: 'Operasional',
+      type: TransactionType.expense,
+      amount: 180000,
+      date: DateTime(_threeMonthsAgo.year, _threeMonthsAgo.month, _threeMonthsAgo.day, 17, 45),
+    ),
+    TransactionModel(
+      id: 't15',
+      title: 'Pemasukan Cabang',
+      category: 'Pemasukan Cabang',
+      type: TransactionType.income,
+      amount: 900000,
+      date: DateTime(_fourMonthsAgo.year, _fourMonthsAgo.month, _fourMonthsAgo.day, 13, 20),
+    ),
+    TransactionModel(
+      id: 't16',
+      title: 'Pembelian Bahan Baku',
+      category: 'Bahan Baku',
+      type: TransactionType.expense,
+      amount: 320000,
+      date: DateTime(_fourMonthsAgo.year, _fourMonthsAgo.month, _fourMonthsAgo.day, 16, 10),
+    ),
   ];
 
   static final ValueNotifier<List<TransactionModel>> transactionsNotifier =
       ValueNotifier(List.unmodifiable(transactions));
 
   static void addTransaction(TransactionModel transaction) {
-    transactions.insert(0, transaction);
+    transactions.add(transaction);
+    transactions.sort((a, b) => b.date.compareTo(a.date));
     transactionsNotifier.value = List.unmodifiable(transactions);
   }
 

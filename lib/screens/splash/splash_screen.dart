@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/services/auth_service.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -84,11 +83,7 @@ class SplashScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      final isLoggedIn = AuthService().currentUser != null;
-                      Navigator.pushReplacementNamed(
-                        context,
-                        isLoggedIn ? AppRoutes.main : AppRoutes.login,
-                      );
+                      Navigator.pushReplacementNamed(context, AppRoutes.login);
                     },
                     child: const Text(
                       "MULAI",

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/data/dummy_data.dart';
 import '../../core/models/transaction_model.dart';
-import '../../core/services/auth_service.dart';
-import '../../core/services/transaction_service.dart';
 import '../../core/widgets/transaction_tile.dart';
 import 'add_transaction_screen.dart';
 
@@ -116,7 +115,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 ],
               ),
             ),
-            Padding(
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
@@ -144,11 +144,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: StreamBuilder<List<TransactionModel>>(
-                stream: TransactionService()
-                    .watchTransactions(AuthService().currentUser!.uid),
-                builder: (context, snapshot) {
-                  final source = snapshot.data ?? const <TransactionModel>[];
+              child: ValueListenableBuilder<List<TransactionModel>>(
+                valueListenable: DummyData.transactionsNotifier,
+                builder: (context, source, _) {
                   final grouped = _grouped(source);
                   return ListView(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 90),

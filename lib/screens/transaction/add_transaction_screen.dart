@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/constants/app_colors.dart';
-import '../../core/data/dummy_data.dart' show DummyData;
+import '../../core/data/dummy_data.dart';
 import '../../core/models/transaction_model.dart';
-import '../../core/services/auth_service.dart';
-import '../../core/services/transaction_service.dart';
 
 const _indonesianMonths = [
   'Januari',
@@ -90,11 +88,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
     setState(() => _isSaving = true);
     try {
-      final uid = AuthService().currentUser!.uid;
-      await TransactionService().addTransaction(
-        uid,
+      DummyData.addTransaction(
         TransactionModel(
-          id: '',
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
           title: _category!,
           category: _category!,
           type: _type,
@@ -107,11 +103,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       );
       if (!mounted) return;
       Navigator.pop(context);
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menyimpan transaksi, coba lagi')),
-      );
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

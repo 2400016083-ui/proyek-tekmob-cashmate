@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/data/dummy_data.dart';
 import '../../core/models/user_model.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/services/auth_service.dart';
-import '../../core/services/user_service.dart';
+import '../../core/widgets/user_avatar.dart';
+import 'business_info_screen.dart';
+import 'cloud_backup_screen.dart';
+import 'edit_profile_screen.dart';
+import 'notification_settings_screen.dart';
+import 'security_privacy_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    await AuthService().signOut();
-    if (!context.mounted) return;
+  void _logout(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.login,
@@ -27,31 +30,24 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = AuthService().currentUser!.uid;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: StreamBuilder<UserModel?>(
-          stream: UserService().watchUserProfile(uid),
-          builder: (context, snapshot) {
-            final user = snapshot.data;
-            if (user == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: ValueListenableBuilder<UserModel>(
+          valueListenable: DummyData.currentUserNotifier,
+          builder: (context, user, _) {
             return ListView(
           padding: const EdgeInsets.all(20),
           children: [
             InkWell(
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+              ),
               borderRadius: BorderRadius.circular(12),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 28,
-                    backgroundColor: AppColors.primaryLight,
-                    child: Icon(Icons.person, color: AppColors.primary, size: 28),
-                  ),
+                  UserAvatar(avatarUrl: user.avatarUrl, radius: 28),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
@@ -100,7 +96,10 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             InkWell(
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BusinessInfoScreen()),
+              ),
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 padding: const EdgeInsets.all(16),
@@ -147,28 +146,48 @@ class ProfileScreen extends StatelessWidget {
             _MenuTile(
               icon: Icons.person_outline,
               label: 'Edit Profil',
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+              ),
             ),
             _MenuTile(
               icon: Icons.storefront_outlined,
               label: 'Informasi Usaha',
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BusinessInfoScreen()),
+              ),
             ),
             _MenuTile(
               icon: Icons.notifications_none_rounded,
               label: 'Notifikasi',
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationSettingsScreen()),
+              ),
             ),
-            _MenuTile(
-              icon: Icons.cloud_outlined,
-              label: 'Cadangan Cloud',
-              trailingText: 'Active',
-              onTap: () => _showComingSoon(context),
+            ValueListenableBuilder<bool>(
+              valueListenable: DummyData.cloudBackupActiveNotifier,
+              builder: (context, isBackupActive, _) {
+                return _MenuTile(
+                  icon: Icons.cloud_outlined,
+                  label: 'Cadangan Cloud',
+                  trailingText: isBackupActive ? 'Active' : 'Nonaktif',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CloudBackupScreen()),
+                  ),
+                );
+              },
             ),
             _MenuTile(
               icon: Icons.shield_outlined,
               label: 'Keamanan & Privasi',
-              onTap: () => _showComingSoon(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SecurityPrivacyScreen()),
+              ),
             ),
             _MenuTile(
               icon: Icons.help_outline_rounded,
